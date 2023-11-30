@@ -25,14 +25,16 @@ export function extractErc20Balance(tokens: Erc20Balance[]) {
 
 export function formatPortfolioTransaction(
     resp: AssetTransfersWithMetadataResponse,
-    portfolioAddresses: string[]
+    address: string,
+    addressDirectory: Record<string, string>
 ) {
     const txns: TransactionData[] = []
     resp.transfers.forEach((transfer) => {
         const txn: TransactionData = {
-            transactionType: portfolioAddresses.includes(transfer.from)
-                ? TransactionType.SENT
-                : TransactionType.RECEIVED,
+            transactionType:
+                addressDirectory[address] === transfer.from
+                    ? TransactionType.SENT
+                    : TransactionType.RECEIVED,
             asset: transfer.asset || '',
             assetContract: transfer.rawContract,
             from: transfer.from,
@@ -94,15 +96,15 @@ export function switchAddressToId(
 }
 
 export default function getSelectedErc20Balance(
-    addresses: string[],
+    portfolioAddresses: string[],
     selectedAddress: string,
     erc20Balances: Erc20BalancesRecord
 ) {
     let erc20BalanceMapping: Record<string, Erc20Balance> = {}
     let selectedErc20Balance: Erc20Balance[] = []
     if (selectedAddress === 'All') {
-        addresses.forEach((address) => {
-            erc20Balances[address].forEach((ownedToken) => {
+        portfolioAddresses.forEach((portfolioAddress) => {
+            erc20Balances[portfolioAddress].forEach((ownedToken) => {
                 if (
                     ownedToken.name &&
                     ownedToken.symbol &&
@@ -154,14 +156,14 @@ export default function getSelectedErc20Balance(
 }
 
 export function getSelectedEtherBalance(
-    addresses: string[],
+    portfolioAddresses: string[],
     selectedAddress: string,
     etherBalances: EtherBalancesRecord
 ) {
     let selectedEtherBalance = 0
     if (selectedAddress === 'All') {
-        addresses.forEach((address) => {
-            selectedEtherBalance += etherBalances[address]
+        portfolioAddresses.forEach((portfolioAddress) => {
+            selectedEtherBalance += etherBalances[portfolioAddress]
         })
     } else {
         selectedEtherBalance = etherBalances[selectedAddress]
@@ -169,28 +171,28 @@ export function getSelectedEtherBalance(
     return selectedEtherBalance
 }
 
-export function hideWalletAddress(address: string) {
+export function shortenPortfolioAddress(address: string) {
     return `${address.slice(0, 4)}...${address.slice(-4)}`
 }
 
 export function getSelectedPortfolioTransactions(
-    addresses: string[],
+    portfolioAddresses: string[],
     selectedAddress: string,
     portfolioTransactions: TransactionDataRecord
 ) {
     let selectedPortfolioTransactions: TransactionData[] = []
     if (selectedAddress === 'All') {
-        addresses.forEach((address) => {
-            if (portfolioTransactions[address].to) {
+        portfolioAddresses.forEach((portfolioAddress) => {
+            if (portfolioTransactions[portfolioAddress].to) {
                 selectedPortfolioTransactions =
                     selectedPortfolioTransactions.concat(
-                        portfolioTransactions[address].to
+                        portfolioTransactions[portfolioAddress].to
                     )
             }
-            if (portfolioTransactions[address].from) {
+            if (portfolioTransactions[portfolioAddress].from) {
                 selectedPortfolioTransactions =
                     selectedPortfolioTransactions.concat(
-                        portfolioTransactions[address].from
+                        portfolioTransactions[portfolioAddress].from
                     )
             }
         })

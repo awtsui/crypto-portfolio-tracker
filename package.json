@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "alchemy-sdk": "^3.0.0",
+        "bcrypt-ts": "^5.0.0",
         "chart.js": "^4.4.0",
         "coingecko-api-v3": "^0.0.29",
         "mongoose": "^8.0.1",

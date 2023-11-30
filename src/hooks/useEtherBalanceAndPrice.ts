@@ -6,28 +6,40 @@ import { Utils } from 'alchemy-sdk'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
-export default function useEtherBalanceAndPrice(portfolioAddresses: string[]) {
+export default function useEtherBalanceAndPrice(
+    portfolioAddresses: string[],
+    addressDirectory: Record<string, string>
+) {
     const alchemy = getAlchemy()
     const [etherBalances, setEtherBalance] = useState<EtherBalancesRecord>({})
     const [etherPrice, setEtherPrice] = useState<number>(0)
 
     useEffect(() => {
-        const fetchPromises = portfolioAddresses.map(
-            async (portfolioAddress) => {
-                if (!Object.keys(etherBalances).includes(portfolioAddress)) {
-                    alchemy.core.getBalance(portfolioAddress).then((resp) => {
-                        setEtherBalance((prev) => ({
-                            ...prev,
-                            [portfolioAddress]: parseFloat(
-                                Utils.formatEther(resp)
-                            ),
-                        }))
-                    })
+        if (
+            Object.keys(portfolioAddresses).length ===
+            Object.keys(addressDirectory).length
+        ) {
+            const fetchPromises = portfolioAddresses.map(
+                async (portfolioAddress) => {
+                    if (
+                        !Object.keys(etherBalances).includes(portfolioAddress)
+                    ) {
+                        alchemy.core
+                            .getBalance(addressDirectory[portfolioAddress])
+                            .then((resp) => {
+                                setEtherBalance((prev) => ({
+                                    ...prev,
+                                    [portfolioAddress]: parseFloat(
+                                        Utils.formatEther(resp)
+                                    ),
+                                }))
+                            })
+                    }
                 }
-            }
-        )
-        Promise.all(fetchPromises)
-    }, [JSON.stringify(portfolioAddresses)])
+            )
+            Promise.all(fetchPromises)
+        }
+    }, [JSON.stringify(portfolioAddresses), addressDirectory.length])
 
     const etherPriceUrl = new URL('http://localhost:3000/api/coingecko/price')
     etherPriceUrl.searchParams.set('ids', 'ethereum')

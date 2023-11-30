@@ -11,3 +11,5 @@ export const ETHEREUM_BLOCKS_PER_DAY = 7150
 export const DAY_IN_MILLI_SEC = 24 * 60 * 60 * 1000
 
 export const FETCH_PARAM_SIZE = 10
+
+export const SALT_ITERATIONS = 10
