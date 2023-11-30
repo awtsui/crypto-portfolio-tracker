@@ -1,5 +1,8 @@
 'use client'
+import { SALT_ITERATIONS } from '@/constants'
 import { TransactionDataRecord } from '@/types'
+import { shortenPortfolioAddress } from '@/utils/client-helper'
+import { hashSync } from 'bcrypt-ts/browser'
 import {
     Dispatch,
     SetStateAction,
@@ -10,13 +13,15 @@ import {
 } from 'react'
 
 interface PortfolioContext {
-    addresses: string[]
+    portfolioAddresses: string[]
     selectedAddress: string
     setSelectedAddress: Dispatch<SetStateAction<string>>
-    addAddress: (address: string) => void
-    removeAddress: (address: string) => void
+    addPortfolioAddress: (address: string) => void
+    removePortfolioAddress: (address: string) => void
     portfolioTransactions: TransactionDataRecord
     addPortfolioTransactions: (txns: TransactionDataRecord) => void
+    addressDirectory: Record<string, string>
+    hashPortfolioAddress: (address: string) => void
 }
 
 const PortfolioContext = createContext<PortfolioContext | null>(null)
@@ -30,44 +35,33 @@ export const usePortfolio = () => {
     return context
 }
 
-// function loadJSON(key: string) {
-//     if (localStorage[key]) return JSON.parse(localStorage[key] ?? '')
-//     return ''
-// }
-// function saveJSON(key: string, data: string[]) {
-//     localStorage.setItem(key, JSON.stringify(data))
-// }
-
 interface PortfolioProviderProps {
     children?: React.ReactNode
 }
 
 export function PortfolioProvider({ children }: PortfolioProviderProps) {
-    // const key = 'PORTFOLIO_ADDRESSES'
-    // const firstRender = useRef(true)
-    const [addresses, setAddresses] = useState<string[]>([])
-    // For testing --> Large Example Wallet: '0x1f9090aaE28b8a3dCeaDf281B0F12828e676c326', '0x22356921393726deba67808dfbdc087f69473552'
+    const [portfolioAddresses, setPortfolioAddresses] = useState<string[]>([])
+    const [addressDirectory, setAddressDirectory] = useState<
+        Record<string, string>
+    >({})
+
     const [portfolioTransactions, setPortfolioTransactions] =
         useState<TransactionDataRecord>({})
     const [selectedAddress, setSelectedAddress] = useState<string>('')
 
-    // useEffect(() => {
-    //     if (firstRender.current) {
-    //         firstRender.current = false
-    //         const localAddresses = loadJSON(key)
-    //         localAddresses && setAddresses(localAddresses)
-    //     }
-    //     saveJSON(key, addresses)
-    // }, [key, addresses])
-
-    // TODO: Verify address
-    const addAddress = useCallback((address: string) => {
-        setAddresses((addresses) => addresses.concat(address))
+    const addPortfolioAddress = useCallback((address: string) => {
+        setPortfolioAddresses((prev) =>
+            prev.concat(shortenPortfolioAddress(address))
+        )
+        setAddressDirectory((prev) => ({
+            ...prev,
+            [shortenPortfolioAddress(address)]: address,
+        }))
     }, [])
 
-    const removeAddress = useCallback((address: string) => {
-        setAddresses((addresses) =>
-            addresses.filter((value) => value !== address)
+    const removePortfolioAddress = useCallback((address: string) => {
+        setPortfolioAddresses((prev) =>
+            prev.filter((value) => value !== address)
         )
     }, [])
 
@@ -78,16 +72,28 @@ export function PortfolioProvider({ children }: PortfolioProviderProps) {
         []
     )
 
+    const hashPortfolioAddress = useCallback(
+        (address: string) => {
+            setAddressDirectory((prev) => ({
+                ...prev,
+                [address]: hashSync(addressDirectory[address], SALT_ITERATIONS),
+            }))
+        },
+        [Object.keys(addressDirectory).length]
+    )
+
     return (
         <PortfolioContext.Provider
             value={{
-                addresses,
+                portfolioAddresses,
                 selectedAddress,
                 setSelectedAddress,
-                addAddress,
-                removeAddress,
+                addPortfolioAddress,
+                removePortfolioAddress,
                 portfolioTransactions,
                 addPortfolioTransactions,
+                addressDirectory,
+                hashPortfolioAddress,
             }}
         >
             {children}

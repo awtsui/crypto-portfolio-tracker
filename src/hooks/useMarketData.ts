@@ -37,7 +37,6 @@ export default function useMarketData(tokenIdConverter: MapRecord) {
 
         Promise.all(fetchPromises)
     }, [JSON.stringify(tokenIdConverter)])
-    // console.log(marketData)
 
     return { marketData }
 }

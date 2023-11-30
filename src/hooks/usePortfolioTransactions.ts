@@ -6,23 +6,26 @@ import { Alchemy, AssetTransfersCategory } from 'alchemy-sdk'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
-export default function usePortfolioTransactions(portfolioAddresses: string[]) {
+export default function usePortfolioTransactions(
+    portfolioAddresses: string[],
+    addressDirectory: Record<string, string>
+) {
     const alchemy = getAlchemy()
-
-    const defaultTransactionData = portfolioAddresses.map((addr) => [addr, []])
 
     const [latestBlockNumber, setLatestBlockNumber] = useState<number>(0)
     const [newTransactions, setNewTransactions] =
-        useState<TransactionDataRecord>(
-            Object.fromEntries(defaultTransactionData)
-        )
+        useState<TransactionDataRecord>({})
 
     useEffect(() => {
         alchemy.core.getBlockNumber().then((resp) => setLatestBlockNumber(resp))
     }, [])
 
     useEffect(() => {
-        if (latestBlockNumber > 0) {
+        if (
+            latestBlockNumber > 0 &&
+            Object.keys(portfolioAddresses).length ===
+                Object.keys(addressDirectory).length
+        ) {
             const fetchPromises = portfolioAddresses.map(
                 async (portfolioAddress) => {
                     if (
@@ -41,7 +44,7 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
                                     AssetTransfersCategory.INTERNAL,
                                     AssetTransfersCategory.ERC20,
                                 ],
-                                fromAddress: portfolioAddress,
+                                fromAddress: addressDirectory[portfolioAddress],
                                 excludeZeroValue: true,
                                 withMetadata: true,
                             })
@@ -63,7 +66,8 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
                                             ...prev[portfolioAddress],
                                             from: formatPortfolioTransaction(
                                                 resp,
-                                                portfolioAddresses
+                                                portfolioAddress,
+                                                addressDirectory
                                             ),
                                         },
                                     }
@@ -83,7 +87,7 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
                                     AssetTransfersCategory.INTERNAL,
                                     AssetTransfersCategory.ERC20,
                                 ],
-                                toAddress: portfolioAddress,
+                                toAddress: addressDirectory[portfolioAddress],
                                 excludeZeroValue: true,
                                 withMetadata: true,
                             })
@@ -105,7 +109,8 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
                                             ...prev[portfolioAddress],
                                             to: formatPortfolioTransaction(
                                                 resp,
-                                                portfolioAddresses
+                                                portfolioAddress,
+                                                addressDirectory
                                             ),
                                         },
                                     }
@@ -116,7 +121,11 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
             )
             Promise.all(fetchPromises)
         }
-    }, [latestBlockNumber, JSON.stringify(portfolioAddresses)])
+    }, [
+        latestBlockNumber,
+        JSON.stringify(portfolioAddresses),
+        Object.keys(addressDirectory).length,
+    ])
     return { newTransactions }
 }
 

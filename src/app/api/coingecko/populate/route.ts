@@ -11,12 +11,10 @@ export async function GET(request: NextRequest) {
         const resp = await geckoClient.coinList({ include_platform: true })
 
         resp.forEach(async (coinData) => {
-            // TODO: Add tokenids and relevant info into mongodb
             if (coinData.platforms) {
                 if (!Object.keys(coinData.platforms).includes('ethereum')) {
                     Object.values(coinData.platforms).forEach(
                         async (address) => {
-                            // console.log(`NOT ETHEREUM: ${address}`)
                             if (address) {
                                 await TokenFilter.create({
                                     contractAddress: address,
@@ -27,9 +25,6 @@ export async function GET(request: NextRequest) {
                     )
                 } else {
                     if (coinData.id && coinData.symbol) {
-                        // console.log(
-                        //     `ETHEREUM: ${coinData.platforms['ethereum']}`
-                        // )
                         if (coinData.platforms['ethereum'].length) {
                             await TokenInfo.create({
                                 tokenId: coinData.id,

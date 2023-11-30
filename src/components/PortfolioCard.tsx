@@ -14,43 +14,62 @@ import useSelectedPortfolioValues from '@/hooks/useSelectedPortfolioValues'
 
 export default function PortfolioCard() {
     const {
-        addresses,
+        portfolioAddresses,
         portfolioTransactions,
         addPortfolioTransactions,
         selectedAddress,
+        addressDirectory,
+        hashPortfolioAddress,
     } = usePortfolio()
-    const { etherBalances, etherPrice } = useEtherBalanceAndPrice(addresses)
+    const { etherBalances, etherPrice } = useEtherBalanceAndPrice(
+        portfolioAddresses,
+        addressDirectory
+    )
     const { erc20Balances, erc20Prices, erc20IdConverter } =
-        useErc20BalancesAndPrices(addresses)
+        useErc20BalancesAndPrices(portfolioAddresses, addressDirectory)
 
-    const { newTransactions } = usePortfolioTransactions(addresses)
-
-    useEffect(() => {
-        addPortfolioTransactions(newTransactions)
-    }, [JSON.stringify(newTransactions)])
+    const { newTransactions } = usePortfolioTransactions(
+        portfolioAddresses,
+        addressDirectory
+    )
 
     const {
         selectedErc20Balance,
         selectedEtherBalance,
         selectedPortfolioTransactions,
     } = useSelectedPortfolioValues({
-        portfolioAddresses: addresses,
+        portfolioAddresses,
         selectedAddress,
         erc20Balances,
         etherBalances,
         portfolioTransactions,
     })
 
-    // if (
-    //     !Object.keys(erc20Prices).length ||
-    //     !selectedErc20Balance.length ||
-    //     !selectedEtherBalance ||
-    //     !selectedPortfolioTransactions.length ||
-    //     !Object.keys(erc20IdConverter).length ||
-    //     !etherPrice
-    // ) {
-    //     return <div>Loading...</div>
-    // }
+    useEffect(() => {
+        addPortfolioTransactions(newTransactions)
+    }, [JSON.stringify(newTransactions)])
+
+    useEffect(() => {
+        if (
+            Object.keys(erc20Balances).length ===
+                Object.keys(etherBalances).length &&
+            Object.keys(etherBalances).length ===
+                Object.keys(portfolioAddresses).length &&
+            Object.keys(portfolioAddresses).length ===
+                portfolioAddresses.length &&
+            Object.keys(addressDirectory).includes(selectedAddress)
+        ) {
+            console.log(`LOG: Loading complete, now hashing ${selectedAddress}`)
+            hashPortfolioAddress(selectedAddress)
+        }
+    }, [
+        JSON.stringify(erc20Balances),
+        JSON.stringify(etherBalances),
+        JSON.stringify(portfolioTransactions),
+        selectedAddress,
+        JSON.stringify(portfolioAddresses),
+        addressDirectory.length,
+    ])
 
     return (
         <div className="flex flex-col w-screen items-center gap-6">

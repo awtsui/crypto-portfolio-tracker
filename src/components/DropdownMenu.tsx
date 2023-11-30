@@ -1,6 +1,7 @@
 'use client'
 import { usePortfolio } from '@/context/PortfolioContextProvider'
-import { hideWalletAddress } from '@/utils/client-helper'
+import { shortenPortfolioAddress } from '@/utils/client-helper'
+import { compareSync } from 'bcrypt-ts/browser'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'web3-validator'
 
@@ -9,13 +10,13 @@ export default function DropdownMenu() {
     const [formAddress, setFormAddress] = useState('')
     const [newAddress, setNewAddress] = useState('')
     const {
-        addresses,
-        addAddress,
-        removeAddress,
+        portfolioAddresses,
+        addPortfolioAddress,
+        removePortfolioAddress,
         selectedAddress,
         setSelectedAddress,
     } = usePortfolio()
-    const menuAddresses = [...addresses]
+    const menuAddresses = [...portfolioAddresses]
 
     if (menuAddresses.length === 2) {
         menuAddresses.unshift('All')
@@ -23,9 +24,9 @@ export default function DropdownMenu() {
 
     useEffect(() => {
         if (newAddress) {
-            addAddress(newAddress)
-            setSelectedAddress(newAddress)
-            menuAddresses.push(newAddress)
+            addPortfolioAddress(newAddress)
+            setSelectedAddress(shortenPortfolioAddress(newAddress))
+            menuAddresses.push(shortenPortfolioAddress(newAddress))
         }
     }, [newAddress])
 
@@ -35,7 +36,10 @@ export default function DropdownMenu() {
     }
 
     const handleAddClick = () => {
-        if (isAddress(formAddress) && !addresses.includes(formAddress)) {
+        if (
+            isAddress(formAddress) &&
+            !portfolioAddresses.includes(shortenPortfolioAddress(formAddress))
+        ) {
             setNewAddress(formAddress)
         } else {
             console.log('ERR: Invalid wallet address')
@@ -59,7 +63,7 @@ export default function DropdownMenu() {
                 {!selectedAddress
                     ? 'None'
                     : selectedAddress !== 'All'
-                    ? hideWalletAddress(selectedAddress)
+                    ? selectedAddress
                     : 'All'}
             </button>
 
@@ -74,9 +78,7 @@ export default function DropdownMenu() {
                                         className="pl-2 hover:bg-slate-400 flex-grow rounded-lg py-2"
                                         onClick={() => handleSetLabel(address)}
                                     >
-                                        {address !== 'All'
-                                            ? hideWalletAddress(address)
-                                            : address}
+                                        {address}
                                     </button>
                                     {/* {address !== 'All' && (
                                         <button

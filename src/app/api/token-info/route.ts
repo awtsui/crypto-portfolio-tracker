@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
 
         contractsArray = await filterTokenIds({ contracts: contractsArray })
 
-        // TODO: Check if tokenIds exist in mongodb FIRST
         const tokenInfos: TokenInfoInterface[] = await TokenInfo.find({
             contractAddress: { $in: contractsArray },
         })
