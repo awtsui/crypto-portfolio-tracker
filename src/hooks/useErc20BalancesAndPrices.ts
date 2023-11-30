@@ -4,8 +4,6 @@ import { fetcher } from '@/utils/fetcher'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 
-const fetchParamSize = 10
-
 export default function useErc20BalancesAndPrices(
     portfolioAddresses: string[]
 ) {

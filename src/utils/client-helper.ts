@@ -178,16 +178,36 @@ export function getSelectedPortfolioTransactions(
     selectedAddress: string,
     portfolioTransactions: TransactionDataRecord
 ) {
+    console.log(portfolioTransactions)
     let selectedPortfolioTransactions: TransactionData[] = []
     if (selectedAddress === 'All') {
         addresses.forEach((address) => {
-            selectedPortfolioTransactions =
-                selectedPortfolioTransactions.concat(
-                    portfolioTransactions[address]
-                )
+            if (portfolioTransactions[address].to) {
+                selectedPortfolioTransactions =
+                    selectedPortfolioTransactions.concat(
+                        portfolioTransactions[address].to
+                    )
+            }
+            if (portfolioTransactions[address].from) {
+                selectedPortfolioTransactions =
+                    selectedPortfolioTransactions.concat(
+                        portfolioTransactions[address].from
+                    )
+            }
         })
     } else {
-        selectedPortfolioTransactions = portfolioTransactions[selectedAddress]
+        if (portfolioTransactions[selectedAddress].to) {
+            selectedPortfolioTransactions =
+                selectedPortfolioTransactions.concat(
+                    portfolioTransactions[selectedAddress].to
+                )
+        }
+        if (portfolioTransactions[selectedAddress].from) {
+            selectedPortfolioTransactions =
+                selectedPortfolioTransactions.concat(
+                    portfolioTransactions[selectedAddress].from
+                )
+        }
     }
     selectedPortfolioTransactions.sort((a, b) =>
         a.timestamp < b.timestamp ? -1 : 1

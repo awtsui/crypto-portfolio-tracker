@@ -53,8 +53,8 @@ export default function PortfolioCard() {
     // }
 
     return (
-        <div className="flex h-screen justify-center overflow-y-hidden">
-            <div className="flex flex-col min-h-screen max-w-[750px] w-full items-start pl-40 pr-5 pt-10 pb-10 gap-5">
+        <div className="flex flex-col w-screen items-center gap-6">
+            <div className="flex flex-col max-w-[1000px] w-full items-start gap-3 pt-5">
                 <div className="flex w-full justify-between items-center">
                     <div className="p-5 text-black bg-white shadow-md rounded-2xl">
                         <PortfolioBalanceCard
@@ -81,7 +81,9 @@ export default function PortfolioCard() {
                         }
                     />
                 </div>
-                <div className="text-black rounded-2xl w-full px-10 py-6 bg-white shadow-md">
+            </div>
+            <div className="flex w-full max-w-[1000px] gap-6 pb-20 max-h-[600px]">
+                <div className="flex-auto">
                     <PortfolioAssetsCard
                         etherPrice={etherPrice}
                         erc20Prices={erc20Prices}
@@ -89,9 +91,7 @@ export default function PortfolioCard() {
                         selectedErc20Balance={selectedErc20Balance}
                     />
                 </div>
-            </div>
-            <div className="flex max-w-[600px] w-full pl-5 pr-40 py-20">
-                <div className="w-full">
+                <div className="flex-auto">
                     <PortfolioTransactionsCard
                         selectedPortfolioTransactions={
                             selectedPortfolioTransactions

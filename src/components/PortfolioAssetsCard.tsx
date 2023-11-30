@@ -24,43 +24,46 @@ export default function PortfolioAssetsCard({
     })
 
     return (
-        <div className="flex flex-col gap-2 overflow-auto max-h-[350px]">
-            {tokenValues.map((tokenValue) => (
-                <div key={tokenValue.name}>
-                    <hr />
-                    <div className="flex mt-3 justify-between items-center">
-                        <div className="flex gap-4">
-                            <div className="relative w-10 h-10 mb-2 rounded-full">
-                                {tokenValue.symbol === 'ETH' ? (
-                                    <Image
-                                        src={etherLogo}
-                                        alt={tokenValue.name || ''}
-                                        fill
-                                    />
-                                ) : (
-                                    <Image
-                                        src={tokenValue.logo}
-                                        alt={tokenValue.name || ''}
-                                        fill
-                                    />
-                                )}
-                            </div>
-                            <div className="flex flex-col">
-                                <div>{tokenValue.name}</div>
-                                <div className="flex">
-                                    <div>
-                                        {tokenValue.balance.toFixed(3)}{' '}
-                                        {tokenValue.symbol}{' '}
-                                        {tokenValue.price.toFixed(2)}
+        <div className="gap-2 flex flex-col items-center rounded-xl h-full bg-white shadow-md">
+            <div className="px-10 pt-5 text-2xl">Assets</div>
+            <div className="px-10 py-5 w-full flex flex-col overflow-auto gap-4">
+                {tokenValues.map((tokenValue) => (
+                    <div key={tokenValue.name} className="flex flex-col">
+                        <hr />
+                        <div className="flex mt-3 justify-between items-center w-full">
+                            <div className="flex gap-4 justify-betweenl">
+                                <div className="relative w-10 h-10 mb-2 rounded-full">
+                                    {tokenValue.symbol === 'ETH' ? (
+                                        <Image
+                                            src={etherLogo}
+                                            alt={tokenValue.name || ''}
+                                            fill
+                                        />
+                                    ) : (
+                                        <Image
+                                            src={tokenValue.logo}
+                                            alt={tokenValue.name || ''}
+                                            fill
+                                        />
+                                    )}
+                                </div>
+                                <div className="flex flex-col">
+                                    <div>{tokenValue.name}</div>
+                                    <div className="flex">
+                                        <div>
+                                            {tokenValue.balance.toFixed(3)}{' '}
+                                            {tokenValue.symbol}{' '}
+                                            {tokenValue.price.toFixed(2)}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div>${tokenValue.value.toFixed(2)}</div>
+                            <div>${tokenValue.value.toFixed(2)}</div>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     )
 }

@@ -12,26 +12,17 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
     const defaultTransactionData = portfolioAddresses.map((addr) => [addr, []])
 
     const [latestBlockNumber, setLatestBlockNumber] = useState<number>(0)
-    // const [prevBlockNumber, setPrevBlockNumber] = useState<number>(0)
     const [newTransactions, setNewTransactions] =
         useState<TransactionDataRecord>(
             Object.fromEntries(defaultTransactionData)
         )
 
-    const [transactionsLoaded, setTransactionsLoaded] = useState(true)
-    const blockNumberFetcher = (client: Alchemy) => client.core.getBlockNumber()
-    const blockNumberResp = useSWR(alchemy, blockNumberFetcher)
+    useEffect(() => {
+        alchemy.core.getBlockNumber().then((resp) => setLatestBlockNumber(resp))
+    }, [])
 
     useEffect(() => {
-        if (blockNumberResp.data && transactionsLoaded) {
-            // setPrevBlockNumber(latestBlockNumber + 1)
-            setLatestBlockNumber(blockNumberResp.data)
-            setTransactionsLoaded(false)
-        }
-    }, [JSON.stringify(blockNumberResp)])
-
-    useEffect(() => {
-        if (!transactionsLoaded) {
+        if (latestBlockNumber > 0) {
             const fetchPromises = portfolioAddresses.map(
                 async (portfolioAddress) => {
                     alchemy.core
@@ -58,18 +49,20 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
                                         portfolioAddress
                                     )
                                 ) {
-                                    prev[portfolioAddress] = []
+                                    prev[portfolioAddress] = {
+                                        to: [],
+                                        from: [],
+                                    }
                                 }
                                 return {
                                     ...prev,
-                                    [portfolioAddress]: prev[
-                                        portfolioAddress
-                                    ].concat(
-                                        formatPortfolioTransaction(
+                                    [portfolioAddress]: {
+                                        ...prev[portfolioAddress],
+                                        from: formatPortfolioTransaction(
                                             resp,
                                             portfolioAddresses
-                                        )
-                                    ),
+                                        ),
+                                    },
                                 }
                             })
                         })
@@ -98,26 +91,26 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
                                         portfolioAddress
                                     )
                                 ) {
-                                    prev[portfolioAddress] = []
+                                    prev[portfolioAddress] = {
+                                        to: [],
+                                        from: [],
+                                    }
                                 }
                                 return {
                                     ...prev,
-                                    [portfolioAddress]: prev[
-                                        portfolioAddress
-                                    ].concat(
-                                        formatPortfolioTransaction(
+                                    [portfolioAddress]: {
+                                        ...prev[portfolioAddress],
+                                        to: formatPortfolioTransaction(
                                             resp,
                                             portfolioAddresses
-                                        )
-                                    ),
+                                        ),
+                                    },
                                 }
                             })
                         )
                 }
             )
             Promise.all(fetchPromises)
-
-            setTransactionsLoaded(true)
         }
     }, [latestBlockNumber, JSON.stringify(portfolioAddresses)])
     return { newTransactions }

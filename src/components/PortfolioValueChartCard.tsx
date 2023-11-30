@@ -30,6 +30,11 @@ const chartOptions: ChartOptions<'line'> = {
         y: {
             beginAtZero: true,
         },
+        x: {
+            ticks: {
+                maxTicksLimit: 10,
+            },
+        },
     },
 }
 
@@ -93,7 +98,7 @@ export function PortfolioValueChartCard({
     })
 
     return (
-        <div className="flex flex-col items-end gap-4">
+        <div className="flex flex-col items-end">
             <TimePeriodMenu
                 selectedTimePeriod={selectedTimePeriod}
                 setSelectedTimePeriod={setSelectedTimePeriod}

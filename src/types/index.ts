@@ -20,7 +20,11 @@ export type Erc20Balance = {
 }
 export type Erc20BalancesRecord = Record<string, OwnedToken[]>
 export type EtherBalancesRecord = Record<string, number>
-export type TransactionDataRecord = Record<string, TransactionData[]>
+
+export type TransactionDataRecord = Record<
+    string,
+    { from: TransactionData[]; to: TransactionData[] }
+>
 
 export type TransactionData = {
     transactionType: TransactionType

@@ -30,28 +30,14 @@ export default function useSelectedPortfolioValues({
     const [selectedEtherBalance, setSelectedEtherBalance] = useState<number>(0)
     const [selectedPortfolioTransactions, setSelectedPortfolioTransactions] =
         useState<TransactionData[]>([])
+
+    const numOfPortfolioAddresses = portfolioAddresses.length
+
     useEffect(() => {
-        const numOfPortfolioAddresses = portfolioAddresses.length
         if (
-            Object.keys(erc20Balances).length === numOfPortfolioAddresses &&
-            Object.keys(etherBalances).length === numOfPortfolioAddresses &&
             Object.keys(portfolioTransactions).length ===
-                numOfPortfolioAddresses
+            numOfPortfolioAddresses
         ) {
-            setSelectedErc20Balance(
-                getSelectedErc20Balance(
-                    portfolioAddresses,
-                    selectedAddress,
-                    erc20Balances
-                )
-            )
-            setSelectedEtherBalance(
-                getSelectedEtherBalance(
-                    portfolioAddresses,
-                    selectedAddress,
-                    etherBalances
-                )
-            )
             setSelectedPortfolioTransactions(
                 getSelectedPortfolioTransactions(
                     portfolioAddresses,
@@ -63,9 +49,39 @@ export default function useSelectedPortfolioValues({
     }, [
         JSON.stringify(selectedAddress),
         JSON.stringify(portfolioAddresses),
-        JSON.stringify(erc20Balances),
-        JSON.stringify(etherBalances),
         JSON.stringify(portfolioTransactions),
+    ])
+
+    useEffect(() => {
+        if (Object.keys(etherBalances).length === numOfPortfolioAddresses) {
+            setSelectedEtherBalance(
+                getSelectedEtherBalance(
+                    portfolioAddresses,
+                    selectedAddress,
+                    etherBalances
+                )
+            )
+        }
+    }, [
+        JSON.stringify(selectedAddress),
+        JSON.stringify(portfolioAddresses),
+        JSON.stringify(etherBalances),
+    ])
+
+    useEffect(() => {
+        if (Object.keys(erc20Balances).length === numOfPortfolioAddresses) {
+            setSelectedErc20Balance(
+                getSelectedErc20Balance(
+                    portfolioAddresses,
+                    selectedAddress,
+                    erc20Balances
+                )
+            )
+        }
+    }, [
+        JSON.stringify(selectedAddress),
+        JSON.stringify(portfolioAddresses),
+        JSON.stringify(erc20Balances),
     ])
     return {
         selectedErc20Balance,
