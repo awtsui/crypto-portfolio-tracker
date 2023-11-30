@@ -18,26 +18,29 @@ export default function useErc20BalancesAndPrices(
     // TODO: Adapt to multiple addresses
     useEffect(() => {
         const fetchPromises = portfolioAddresses.map(
-            async (portfolioAdrress) => {
-                alchemy.core
-                    .getTokensForOwner(portfolioAdrress)
-                    .then((resp) => {
-                        const tokens = resp.tokens
-                        setErc20Balances((prev) => ({
-                            ...prev,
-                            [portfolioAdrress]: tokens,
-                        }))
+            async (portfolioAddress) => {
+                if (!Object.keys(erc20Balances).includes(portfolioAddress)) {
+                    alchemy.core
+                        .getTokensForOwner(portfolioAddress)
+                        .then((resp) => {
+                            const tokens = resp.tokens
+                            setErc20Balances((prev) => ({
+                                ...prev,
+                                [portfolioAddress]: tokens,
+                            }))
 
-                        setErc20ContractAddresses((prev) =>
-                            prev.concat(
-                                tokens
-                                    .map((token) => token.contractAddress)
-                                    .filter(
-                                        (address) => prev.indexOf(address) < 0
-                                    )
+                            setErc20ContractAddresses((prev) =>
+                                prev.concat(
+                                    tokens
+                                        .map((token) => token.contractAddress)
+                                        .filter(
+                                            (address) =>
+                                                prev.indexOf(address) < 0
+                                        )
+                                )
                             )
-                        )
-                    })
+                        })
+                }
             }
         )
         Promise.all(fetchPromises)

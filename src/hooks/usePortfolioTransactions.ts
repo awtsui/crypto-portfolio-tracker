@@ -25,89 +25,93 @@ export default function usePortfolioTransactions(portfolioAddresses: string[]) {
         if (latestBlockNumber > 0) {
             const fetchPromises = portfolioAddresses.map(
                 async (portfolioAddress) => {
-                    alchemy.core
-                        .getAssetTransfers({
-                            fromBlock: `0x${(
-                                latestBlockNumber -
-                                TimePeriodToDays[TimePeriod.ONE_YEAR] *
-                                    ETHEREUM_BLOCKS_PER_DAY
-                            ).toString(16)}`,
-                            toBlock: `0x${latestBlockNumber.toString(16)}`,
-                            category: [
-                                AssetTransfersCategory.EXTERNAL,
-                                AssetTransfersCategory.INTERNAL,
-                                AssetTransfersCategory.ERC20,
-                            ],
-                            fromAddress: portfolioAddress,
-                            excludeZeroValue: true,
-                            withMetadata: true,
-                        })
-                        .then((resp) => {
-                            setNewTransactions((prev) => {
-                                if (
-                                    !Object.keys(prev).includes(
-                                        portfolioAddress
-                                    )
-                                ) {
-                                    prev[portfolioAddress] = {
-                                        to: [],
-                                        from: [],
-                                    }
-                                }
-                                return {
-                                    ...prev,
-                                    [portfolioAddress]: {
-                                        ...prev[portfolioAddress],
-                                        from: formatPortfolioTransaction(
-                                            resp,
-                                            portfolioAddresses
-                                        ),
-                                    },
-                                }
+                    if (
+                        !Object.keys(newTransactions).includes(portfolioAddress)
+                    ) {
+                        alchemy.core
+                            .getAssetTransfers({
+                                fromBlock: `0x${(
+                                    latestBlockNumber -
+                                    TimePeriodToDays[TimePeriod.ONE_YEAR] *
+                                        ETHEREUM_BLOCKS_PER_DAY
+                                ).toString(16)}`,
+                                toBlock: `0x${latestBlockNumber.toString(16)}`,
+                                category: [
+                                    AssetTransfersCategory.EXTERNAL,
+                                    AssetTransfersCategory.INTERNAL,
+                                    AssetTransfersCategory.ERC20,
+                                ],
+                                fromAddress: portfolioAddress,
+                                excludeZeroValue: true,
+                                withMetadata: true,
                             })
-                        })
+                            .then((resp) => {
+                                setNewTransactions((prev) => {
+                                    if (
+                                        !Object.keys(prev).includes(
+                                            portfolioAddress
+                                        )
+                                    ) {
+                                        prev[portfolioAddress] = {
+                                            to: [],
+                                            from: [],
+                                        }
+                                    }
+                                    return {
+                                        ...prev,
+                                        [portfolioAddress]: {
+                                            ...prev[portfolioAddress],
+                                            from: formatPortfolioTransaction(
+                                                resp,
+                                                portfolioAddresses
+                                            ),
+                                        },
+                                    }
+                                })
+                            })
 
-                    alchemy.core
-                        .getAssetTransfers({
-                            fromBlock: `0x${(
-                                latestBlockNumber -
-                                TimePeriodToDays[TimePeriod.ONE_YEAR] *
-                                    ETHEREUM_BLOCKS_PER_DAY
-                            ).toString(16)}`,
-                            toBlock: `0x${latestBlockNumber.toString(16)}`,
-                            category: [
-                                AssetTransfersCategory.EXTERNAL,
-                                AssetTransfersCategory.INTERNAL,
-                                AssetTransfersCategory.ERC20,
-                            ],
-                            toAddress: portfolioAddress,
-                            excludeZeroValue: true,
-                            withMetadata: true,
-                        })
-                        .then((resp) =>
-                            setNewTransactions((prev) => {
-                                if (
-                                    !Object.keys(prev).includes(
-                                        portfolioAddress
-                                    )
-                                ) {
-                                    prev[portfolioAddress] = {
-                                        to: [],
-                                        from: [],
-                                    }
-                                }
-                                return {
-                                    ...prev,
-                                    [portfolioAddress]: {
-                                        ...prev[portfolioAddress],
-                                        to: formatPortfolioTransaction(
-                                            resp,
-                                            portfolioAddresses
-                                        ),
-                                    },
-                                }
+                        alchemy.core
+                            .getAssetTransfers({
+                                fromBlock: `0x${(
+                                    latestBlockNumber -
+                                    TimePeriodToDays[TimePeriod.ONE_YEAR] *
+                                        ETHEREUM_BLOCKS_PER_DAY
+                                ).toString(16)}`,
+                                toBlock: `0x${latestBlockNumber.toString(16)}`,
+                                category: [
+                                    AssetTransfersCategory.EXTERNAL,
+                                    AssetTransfersCategory.INTERNAL,
+                                    AssetTransfersCategory.ERC20,
+                                ],
+                                toAddress: portfolioAddress,
+                                excludeZeroValue: true,
+                                withMetadata: true,
                             })
-                        )
+                            .then((resp) =>
+                                setNewTransactions((prev) => {
+                                    if (
+                                        !Object.keys(prev).includes(
+                                            portfolioAddress
+                                        )
+                                    ) {
+                                        prev[portfolioAddress] = {
+                                            to: [],
+                                            from: [],
+                                        }
+                                    }
+                                    return {
+                                        ...prev,
+                                        [portfolioAddress]: {
+                                            ...prev[portfolioAddress],
+                                            to: formatPortfolioTransaction(
+                                                resp,
+                                                portfolioAddresses
+                                            ),
+                                        },
+                                    }
+                                })
+                            )
+                    }
                 }
             )
             Promise.all(fetchPromises)

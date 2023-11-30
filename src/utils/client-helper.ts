@@ -178,7 +178,6 @@ export function getSelectedPortfolioTransactions(
     selectedAddress: string,
     portfolioTransactions: TransactionDataRecord
 ) {
-    console.log(portfolioTransactions)
     let selectedPortfolioTransactions: TransactionData[] = []
     if (selectedAddress === 'All') {
         addresses.forEach((address) => {

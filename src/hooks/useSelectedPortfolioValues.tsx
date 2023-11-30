@@ -35,8 +35,9 @@ export default function useSelectedPortfolioValues({
 
     useEffect(() => {
         if (
+            selectedAddress &&
             Object.keys(portfolioTransactions).length ===
-            numOfPortfolioAddresses
+                numOfPortfolioAddresses
         ) {
             setSelectedPortfolioTransactions(
                 getSelectedPortfolioTransactions(
@@ -53,7 +54,10 @@ export default function useSelectedPortfolioValues({
     ])
 
     useEffect(() => {
-        if (Object.keys(etherBalances).length === numOfPortfolioAddresses) {
+        if (
+            selectedAddress &&
+            Object.keys(etherBalances).length === numOfPortfolioAddresses
+        ) {
             setSelectedEtherBalance(
                 getSelectedEtherBalance(
                     portfolioAddresses,
@@ -69,7 +73,10 @@ export default function useSelectedPortfolioValues({
     ])
 
     useEffect(() => {
-        if (Object.keys(erc20Balances).length === numOfPortfolioAddresses) {
+        if (
+            selectedAddress &&
+            Object.keys(erc20Balances).length === numOfPortfolioAddresses
+        ) {
             setSelectedErc20Balance(
                 getSelectedErc20Balance(
                     portfolioAddresses,

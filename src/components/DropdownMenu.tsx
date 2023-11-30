@@ -15,22 +15,29 @@ export default function DropdownMenu() {
         selectedAddress,
         setSelectedAddress,
     } = usePortfolio()
-    const menuAddresses = ['All'].concat(addresses)
-    const handleSetLabel = (address: string) => {
-        setSelectedAddress(address)
-        setIsOpen(!isOpen)
+    const menuAddresses = [...addresses]
+
+    if (menuAddresses.length === 2) {
+        menuAddresses.unshift('All')
     }
 
     useEffect(() => {
         if (newAddress) {
             addAddress(newAddress)
             setSelectedAddress(newAddress)
+            menuAddresses.push(newAddress)
         }
     }, [newAddress])
 
+    const handleSetLabel = (address: string) => {
+        setSelectedAddress(address)
+        setIsOpen(!isOpen)
+    }
+
     const handleAddClick = () => {
-        if (isAddress(formAddress)) {
+        if (isAddress(formAddress) && !addresses.includes(formAddress)) {
             setNewAddress(formAddress)
+        } else {
             console.log('ERR: Invalid wallet address')
         }
         setFormAddress('')
@@ -49,9 +56,11 @@ export default function DropdownMenu() {
                 className="px-2 py-2 flex-grow w-full rounded-lg hover:bg-slate-400"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                {selectedAddress !== 'All'
+                {!selectedAddress
+                    ? 'None'
+                    : selectedAddress !== 'All'
                     ? hideWalletAddress(selectedAddress)
-                    : selectedAddress}
+                    : 'All'}
             </button>
 
             {isOpen && (

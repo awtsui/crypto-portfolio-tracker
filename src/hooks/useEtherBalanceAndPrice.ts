@@ -14,12 +14,16 @@ export default function useEtherBalanceAndPrice(portfolioAddresses: string[]) {
     useEffect(() => {
         const fetchPromises = portfolioAddresses.map(
             async (portfolioAddress) => {
-                alchemy.core.getBalance(portfolioAddress).then((resp) => {
-                    setEtherBalance((prev) => ({
-                        ...prev,
-                        [portfolioAddress]: parseFloat(Utils.formatEther(resp)),
-                    }))
-                })
+                if (!Object.keys(etherBalances).includes(portfolioAddress)) {
+                    alchemy.core.getBalance(portfolioAddress).then((resp) => {
+                        setEtherBalance((prev) => ({
+                            ...prev,
+                            [portfolioAddress]: parseFloat(
+                                Utils.formatEther(resp)
+                            ),
+                        }))
+                    })
+                }
             }
         )
         Promise.all(fetchPromises)

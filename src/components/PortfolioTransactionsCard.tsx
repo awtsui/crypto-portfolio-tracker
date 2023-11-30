@@ -8,9 +8,6 @@ type PortfolioTransactionsCardProps = {
 export default function PortfolioTransactionsCard({
     selectedPortfolioTransactions,
 }: PortfolioTransactionsCardProps) {
-    // TODO: Add green or red text/bg color depending on txn type
-    console.log(selectedPortfolioTransactions)
-    // if (!selectedPortfolioTransactions[0]) return <div>Loading...</div>
     return (
         <div className="flex flex-col w-full bg-white shadow-md h-full rounded-xl items-center gap-2">
             <div className="px-10 pt-5 text-2xl">Transactions</div>

@@ -45,13 +45,11 @@ interface PortfolioProviderProps {
 export function PortfolioProvider({ children }: PortfolioProviderProps) {
     // const key = 'PORTFOLIO_ADDRESSES'
     // const firstRender = useRef(true)
-    const [addresses, setAddresses] = useState<string[]>([
-        '0x22356921393726deba67808dfbdc087f69473552',
-    ])
-    // For testing --> Large Example Wallet: '0x1f9090aaE28b8a3dCeaDf281B0F12828e676c326'
+    const [addresses, setAddresses] = useState<string[]>([])
+    // For testing --> Large Example Wallet: '0x1f9090aaE28b8a3dCeaDf281B0F12828e676c326', '0x22356921393726deba67808dfbdc087f69473552'
     const [portfolioTransactions, setPortfolioTransactions] =
         useState<TransactionDataRecord>({})
-    const [selectedAddress, setSelectedAddress] = useState<string>(addresses[0])
+    const [selectedAddress, setSelectedAddress] = useState<string>('')
 
     // useEffect(() => {
     //     if (firstRender.current) {
