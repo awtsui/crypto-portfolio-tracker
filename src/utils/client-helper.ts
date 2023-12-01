@@ -73,15 +73,18 @@ export function convertEpochToDate({
     includeYear: boolean
 }) {
     const dateObj = new Date(date)
-    const month = dateObj.toLocaleString('default', { month: 'short' }) //months from 1-12
-    let day = dateObj.getUTCDate()
-    let year = dateObj.getUTCFullYear()
-
-    let newDateString = month + ' ' + day
+    let dateString = dateObj.toLocaleString('default', {
+        month: 'short',
+        day: 'numeric',
+    })
     if (includeYear) {
-        newDateString += ', ' + year
+        dateString +=
+            ', ' +
+            dateObj.toLocaleString('default', {
+                year: '2-digit',
+            })
     }
-    return newDateString
+    return dateString
 }
 
 export function switchAddressToId(

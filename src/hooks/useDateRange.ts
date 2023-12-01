@@ -1,5 +1,6 @@
 import { TimePeriodToDays, DAY_IN_MILLI_SEC } from '@/constants'
 import { TimePeriod } from '@/types'
+import { convertEpochToDate } from '@/utils/client-helper'
 import { useEffect, useState } from 'react'
 
 export default function useDateRange() {
