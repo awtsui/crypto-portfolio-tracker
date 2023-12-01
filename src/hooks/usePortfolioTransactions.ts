@@ -1,10 +1,14 @@
+/**
+ * Retrieves transactions for the newly added portfolio address, maintains record
+ * of previously added portfolios, and keeps data stored under specific portfolio address
+ */
+
 import { ETHEREUM_BLOCKS_PER_DAY, TimePeriodToDays } from '@/constants'
 import { TimePeriod, TransactionDataRecord } from '@/types'
 import { getAlchemy } from '@/utils/alchemysdk'
 import { formatPortfolioTransaction } from '@/utils/client-helper'
-import { Alchemy, AssetTransfersCategory } from 'alchemy-sdk'
+import { AssetTransfersCategory } from 'alchemy-sdk'
 import { useEffect, useState } from 'react'
-import useSWR from 'swr'
 
 export default function usePortfolioTransactions(
     portfolioAddresses: string[],

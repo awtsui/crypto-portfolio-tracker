@@ -1,3 +1,7 @@
+/**
+ * Returns ERC-20 token and ether portfolio of selected address
+ */
+
 import { Erc20Balance, IdBalanceRecord, MapRecord } from '@/types'
 import { extractErc20Balance, switchAddressToId } from '@/utils/client-helper'
 import { useEffect, useState } from 'react'

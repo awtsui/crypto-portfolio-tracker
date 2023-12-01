@@ -1,3 +1,7 @@
+/**
+ * Displays current portfolio value of select address
+ */
+
 import { Erc20Balance, TokenPriceRecord } from '@/types'
 
 type PortfolioBalanceCardProps = {

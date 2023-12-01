@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGeckoClient } from '@/utils/coingecko'
+/**
+ * Fetches all token information from CoinGecko and populates two MongoDb collections,
+ * one with non-Ethereum, or unidentifiable, tokens, one with valid Ethereum tokens
+ */
+
 import dbConnect from '@/utils/mongodb'
 import TokenInfo from '@/models/TokenInfo'
 import TokenFilter from '@/models/TokenFilter'

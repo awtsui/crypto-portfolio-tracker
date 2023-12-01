@@ -1,6 +1,10 @@
+/**
+ * Fetches ERC-20 tokens and prices in newly added address, keeps data stored under specific portfolio address
+ */
+
 import { Erc20BalancesRecord, MapRecord, TokenPriceRecord } from '@/types'
 import { getAlchemy } from '@/utils/alchemysdk'
-import { fetcher } from '@/utils/fetcher'
+import { fetcher } from '@/utils/client-helper'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 

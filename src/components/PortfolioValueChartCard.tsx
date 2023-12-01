@@ -1,5 +1,9 @@
 'use client'
 
+/**
+ * Displays change in portfolio value over time for selected address
+ */
+
 import {
     MapRecord,
     TimePeriod,

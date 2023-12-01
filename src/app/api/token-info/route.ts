@@ -1,3 +1,7 @@
+/**
+ * Fetches MongoDB for token's ID used in CoinGecko
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/utils/mongodb'
 import TokenInfo from '@/models/TokenInfo'

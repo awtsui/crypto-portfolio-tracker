@@ -1,3 +1,8 @@
+/**
+ * Aggregates data for selected portfolio, Ether and ERC-20 token balances, and past transactions
+ * Serves to separate reduce number of API calls and data is modular and reused
+ */
+
 import {
     Erc20Balance,
     Erc20BalancesRecord,

@@ -1,3 +1,7 @@
+/**
+ * Displays list of portfolio assets, most valuable at the top, of selected address
+ */
+
 import etherLogo from '@/app/public/ethereum-logo.png'
 import Image from 'next/image'
 import { Erc20Balance, TokenPriceRecord } from '@/types'

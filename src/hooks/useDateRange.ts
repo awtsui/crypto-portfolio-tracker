@@ -1,6 +1,10 @@
+/**
+ * Generates epoch timestamps for each day in the last year. Used to categories
+ * historical price data and plot changes inportfolio value
+ */
+
 import { TimePeriodToDays, DAY_IN_MILLI_SEC } from '@/constants'
 import { TimePeriod } from '@/types'
-import { convertEpochToDate } from '@/utils/client-helper'
 import { useEffect, useState } from 'react'
 
 export default function useDateRange() {

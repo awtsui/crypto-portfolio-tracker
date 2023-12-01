@@ -1,3 +1,7 @@
+/**
+ * Fetches current token prices
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getGeckoClient } from '@/utils/coingecko'
 

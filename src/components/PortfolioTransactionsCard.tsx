@@ -1,3 +1,7 @@
+/**
+ * Displays past transactions, recent first, for the selected portfolio
+ */
+
 import { TransactionData, TransactionType } from '@/types'
 import { convertEpochToDate } from '@/utils/client-helper'
 

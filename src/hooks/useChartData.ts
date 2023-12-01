@@ -1,3 +1,7 @@
+/**
+ * Formats data to be plotted with X (dates) and Y (portfolio value)
+ */
+
 import { TimePeriodToDays } from '@/constants'
 import { TimePeriod } from '@/types'
 import { convertEpochToDate } from '@/utils/client-helper'

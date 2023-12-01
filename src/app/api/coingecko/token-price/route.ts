@@ -1,7 +1,10 @@
+/**
+ * Fetches ERC-20 token prices, identified with contract address
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getGeckoClient } from '@/utils/coingecko'
-
-const fetchParamSize = 10
+import { FETCH_PARAM_SIZE } from '@/constants'
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
@@ -19,9 +22,9 @@ export async function GET(request: NextRequest) {
         let contractAddressArray = contractAddresses.split(',')
         let data = {}
         let fetchIndex = 0
-        while (fetchIndex * fetchParamSize < contractAddressArray.length) {
-            const startIndex = fetchIndex * fetchParamSize
-            const endIndex = startIndex + fetchParamSize
+        while (fetchIndex * FETCH_PARAM_SIZE < contractAddressArray.length) {
+            const startIndex = fetchIndex * FETCH_PARAM_SIZE
+            const endIndex = startIndex + FETCH_PARAM_SIZE
             const resp = await geckoClient.simpleTokenPrice({
                 id: 'ethereum',
                 contract_addresses: contractAddressArray

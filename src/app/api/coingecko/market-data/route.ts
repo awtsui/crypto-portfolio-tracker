@@ -1,3 +1,9 @@
+/**
+ * Fetches historical token prices from CoinGecko
+ * First checks if MongoDB Cloud contains prices like a cache
+ * Fetches from CoinGecko if database is lacking and updates database
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getGeckoClient } from '@/utils/coingecko'
 import dbConnect from '@/utils/mongodb'
@@ -21,8 +27,6 @@ export async function GET(request: NextRequest) {
 
     try {
         await dbConnect()
-
-        // TODO: Check if token market data exists in mongodb
 
         let result: Array<Array<number>> = []
         const daysInt = parseInt(days)

@@ -1,7 +1,11 @@
+/**
+ * Fetches current ether balance and price of newly added wallet address
+ */
+
 import { REFRESH_RATE } from '@/constants'
 import { EtherBalancesRecord } from '@/types'
 import { getAlchemy } from '@/utils/alchemysdk'
-import { fetcher } from '@/utils/fetcher'
+import { fetcher } from '@/utils/client-helper'
 import { Utils } from 'alchemy-sdk'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'

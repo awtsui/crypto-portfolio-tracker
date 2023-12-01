@@ -1,3 +1,7 @@
+/**
+ * Calculates selected portfolio value
+ */
+
 import { Erc20Balance, TokenDataArray, TokenPriceRecord } from '@/types'
 import { useEffect, useState } from 'react'
 

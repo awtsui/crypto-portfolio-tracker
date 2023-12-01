@@ -1,3 +1,7 @@
+/**
+ * Fetches historical market prices for all tokens on every portfolio
+ */
+
 import { TimePeriodToDays } from '@/constants'
 import { HistoricalDataRecord, MapRecord, TimePeriod } from '@/types'
 import { updateHistoricalData } from '@/utils/client-helper'

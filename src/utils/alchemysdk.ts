@@ -1,3 +1,7 @@
+/**
+ * Fetching from Alchemy API is kept client side. Ran into problems trying to operate sdk server side.
+ */
+
 import { Alchemy, Network } from 'alchemy-sdk'
 
 const config = {
