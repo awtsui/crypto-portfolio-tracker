@@ -1,3 +1,7 @@
+# Crypto Portfolio Tracker
+
+This project requires Node.js v20 or higher
+
 ## Getting Started
 
 First, install dependencies
