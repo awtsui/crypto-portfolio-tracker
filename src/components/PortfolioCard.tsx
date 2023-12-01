@@ -61,6 +61,9 @@ export default function PortfolioCard() {
         ) {
             console.log(`LOG: Loading complete, now hashing ${selectedAddress}`)
             hashPortfolioAddress(selectedAddress)
+            console.log(
+                `LOG: Hash complete --> ${addressDirectory[selectedAddress]}}`
+            )
         }
     }, [
         JSON.stringify(erc20Balances),
