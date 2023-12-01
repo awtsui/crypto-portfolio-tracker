@@ -13,6 +13,7 @@ import { PortfolioValueChartCard } from './PortfolioValueChartCard'
 import useSelectedPortfolioValues from '@/hooks/useSelectedPortfolioValues'
 
 export default function PortfolioCard() {
+    // Handles fetch calls and data structuring for newly added portfolio address
     const {
         portfolioAddresses,
         portfolioTransactions,
@@ -33,6 +34,7 @@ export default function PortfolioCard() {
         addressDirectory
     )
 
+    // Aggregates data based on selected portfolio address, ready to be consumed by historical portfolio calculator
     const {
         selectedErc20Balance,
         selectedEtherBalance,
@@ -49,6 +51,8 @@ export default function PortfolioCard() {
         addPortfolioTransactions(newTransactions)
     }, [JSON.stringify(newTransactions)])
 
+    // Hashes newly added address once necessary fetch calls are made.
+    // Full address should not be needed after this point. A shortened reference is used instead.
     useEffect(() => {
         if (
             Object.keys(erc20Balances).length ===
